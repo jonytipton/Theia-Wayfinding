@@ -23,7 +23,7 @@ Then, run ```brew install git``` and ```brew install git-lfs```
     - Android (required for Android build)
       - ```npm pack com.microsoft.azure.spatial-anchors-sdk.android@2.10.2 --registry https://pkgs.dev.azure.com/aipmr/MixedReality-Unity-Packages/_packaging/Unity-packages/npm/registry/```
     - iOS (required for iOS build)
-      - ```npm pack com.microsoft.azure.spatial-anchors-sdk.iOS@2.10.2 --registry https://pkgs.dev.azure.com/aipmr/MixedReality-Unity-Packages/_packaging/Unity-packages/npm/registry/```
+      - ```npm pack com.microsoft.azure.spatial-anchors-sdk.ios@2.10.2 --registry https://pkgs.dev.azure.com/aipmr/MixedReality-Unity-Packages/_packaging/Unity-packages/npm/registry/```
 
 ## Build/Run
 ### Setup Unity Project
