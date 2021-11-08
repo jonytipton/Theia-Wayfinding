@@ -55,12 +55,17 @@ Then, run ```brew install git``` and ```brew install git-lfs```
 - Select the root Unity-iPhone node to view the project settings, and then select the General tab.
 - Under **Deployment Info**, make sure that the deployment target is set to iOS 11.0 or newer.
 - Select the Signing & Capabilities tab and make sure that Automatically manage signing is enabled. If it's not, enable it, and then reset the build settings by selecting Enable Automatic on the pane that appears.
+- Select the Team drop-down and either select a current account or add a new one using an Apple ID
+- Set Bundle Identifier to be "com.FirstnameLastname" (i.e. com.JonSmith)
+- Remove the in-app purchase add-on at bottom of page
 ### Deply the app to your iOS device
 - Connect the iOS device to the Mac, and set the active scheme to your iOS device.
 ![Image of Xcode menu bar](https://docs.microsoft.com/en-us/azure/includes/media/spatial-anchors-unity/select-device.png)
 - Select **Build** and then run the current scheme.<br/> 
 ![Image of Play icon in Xcode menu bar](https://docs.microsoft.com/en-us/azure/includes/media/spatial-anchors-unity/deploy-run.png)
 <br/>
+- Once the app is installed on your iOS device, enable developer mode by opening Settings -> General -> VPN & Device Management -> Select the Not Trusted Developer App -> Tap Trust
+- Relaunch app from Xcode, future applications will now install and run with developer access
 
 - With Create & Share Anchor, you can create an anchor and save it to your sharing service. In return, you will get back an identifier for it that you can use to retrieve it from the sharing service. You can then run the second scenario, Locate Shared Anchor, from either your device or a different one.
 - With Locate Shared Anchor, you can locate previously shared anchors by entering the identifier mentioned earlier. After you pick your scenario, the app will guide you with further instructions. For example, you'll be asked to move your device around to collect environment information. Later on, you'll place an anchor in the world, wait for it to save, start a new session, and then locate it.
