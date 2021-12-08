@@ -2,7 +2,7 @@
   "scopedRegistries": [],
   "dependencies": {
     "com.microsoft.azure.spatial-anchors-sdk.android": "file:/Users/jonathan/Unity/azure-spatial-anchors-samples/com.microsoft.azure.spatial-anchors-sdk.android-2.10.2.tgz",
-    "com.microsoft.azure.spatial-anchors-sdk.core": "file:/Users/jonathan/Unity/azure-spatial-anchors-samples/com.microsoft.azure.spatial-anchors-sdk.core-2.10.2.tgz",
+    "com.microsoft.azure.spatial-anchors-sdk.core": "file:/Users/jonathan/Desktop/Test/com.microsoft.azure.spatial-anchors-sdk.core-2.10.2.tgz",
     "com.microsoft.azure.spatial-anchors-sdk.ios": "file:/Users/jonathan/Unity/azure-spatial-anchors-samples/com.microsoft.azure.spatial-anchors-sdk.ios-2.10.2.tgz",
     "com.microsoft.azure.spatial-anchors-sdk.windows": "file:/Users/jonathan/Unity/azure-spatial-anchors-samples/com.microsoft.azure.spatial-anchors-sdk.windows-2.10.2.tgz",
     "com.unity.2d.sprite": "1.0.0",
@@ -22,7 +22,7 @@
     "com.unity.xr.arfoundation": "4.1.7",
     "com.unity.xr.arkit": "4.1.7",
     "com.unity.xr.arsubsystems": "4.1.7",
-    "com.unity.xr.management": "4.0.1",
+    "com.unity.xr.management": "4.0.7",
     "com.unity.xr.windowsmr": "4.5.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",

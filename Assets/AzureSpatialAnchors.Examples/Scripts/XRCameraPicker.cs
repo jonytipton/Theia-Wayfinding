@@ -44,7 +44,6 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             Debug.LogError("Unexpected platform for XRCameraPicker. Did you intend to include this script in your scene?");     
 #endif
             GameObject activeCamera = Instantiate(targetCamera);
-
             DontDestroyOnLoad(activeCamera);
         }
     }
