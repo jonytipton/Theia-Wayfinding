@@ -1,16 +1,7 @@
 {
   "dependencies": {
-    "com.microsoft.azure.spatial-anchors-sdk.android": {
-      "version": "file:/Users/jonathan/Unity/azure-spatial-anchors-samples/com.microsoft.azure.spatial-anchors-sdk.android-2.10.2.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {
-        "com.unity.xr.arcore": "4.0.12",
-        "com.microsoft.azure.spatial-anchors-sdk.core": "2.10.2"
-      }
-    },
     "com.microsoft.azure.spatial-anchors-sdk.core": {
-      "version": "file:/Users/jonathan/Desktop/Test/com.microsoft.azure.spatial-anchors-sdk.core-2.10.2.tgz",
+      "version": "file:../com.microsoft.azure.spatial-anchors-sdk.core-2.12.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -20,20 +11,12 @@
       }
     },
     "com.microsoft.azure.spatial-anchors-sdk.ios": {
-      "version": "file:/Users/jonathan/Unity/azure-spatial-anchors-samples/com.microsoft.azure.spatial-anchors-sdk.ios-2.10.2.tgz",
+      "version": "file:../com.microsoft.azure.spatial-anchors-sdk.ios-2.12.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
         "com.unity.xr.arkit": "4.0.12",
-        "com.microsoft.azure.spatial-anchors-sdk.core": "2.10.2"
-      }
-    },
-    "com.microsoft.azure.spatial-anchors-sdk.windows": {
-      "version": "file:/Users/jonathan/Unity/azure-spatial-anchors-samples/com.microsoft.azure.spatial-anchors-sdk.windows-2.10.2.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {
-        "com.microsoft.azure.spatial-anchors-sdk.core": "2.10.2"
+        "com.microsoft.azure.spatial-anchors-sdk.core": "2.12.0"
       }
     },
     "com.unity.2d.sprite": {
