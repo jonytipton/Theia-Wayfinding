@@ -19,11 +19,11 @@ Then, run ```brew install git``` and ```brew install git-lfs```
 - Clone TheiaWayfinding repository into a new directory
 - [Download the ASA packages](https://docs.microsoft.com/en-us/azure/spatial-anchors/how-tos/setup-unity-project?tabs=unity-package-web-ui#download-asa-packages) for import into Unity. Or **use the commands below at root of directory:**
     - Core
-      - ```npm pack com.microsoft.azure.spatial-anchors-sdk.core@2.10.2 --registry https://pkgs.dev.azure.com/aipmr/MixedReality-Unity-Packages/_packaging/Unity-packages/npm/registry/```
+      - ```npm pack com.microsoft.azure.spatial-anchors-sdk.core@2.12.0 --registry https://pkgs.dev.azure.com/aipmr/MixedReality-Unity-Packages/_packaging/Unity-packages/npm/registry/```
     - Android (required for Android build)
-      - ```npm pack com.microsoft.azure.spatial-anchors-sdk.android@2.10.2 --registry https://pkgs.dev.azure.com/aipmr/MixedReality-Unity-Packages/_packaging/Unity-packages/npm/registry/```
+      - ```npm pack com.microsoft.azure.spatial-anchors-sdk.android@2.12.0 --registry https://pkgs.dev.azure.com/aipmr/MixedReality-Unity-Packages/_packaging/Unity-packages/npm/registry/```
     - iOS (required for iOS build)
-      - ```npm pack com.microsoft.azure.spatial-anchors-sdk.ios@2.10.2 --registry https://pkgs.dev.azure.com/aipmr/MixedReality-Unity-Packages/_packaging/Unity-packages/npm/registry/```
+      - ```npm pack com.microsoft.azure.spatial-anchors-sdk.ios@2.12.0 --registry https://pkgs.dev.azure.com/aipmr/MixedReality-Unity-Packages/_packaging/Unity-packages/npm/registry/```
 
 ## Build/Run
 ### Setup Unity Project
