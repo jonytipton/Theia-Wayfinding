@@ -238,7 +238,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                         {
                             await CloudManager.StartSessionAsync();
                         }
-                        await SaveCurrentObjectAnchorToCloudAsync();
+                        await SaveCurrentObjectAnchorToCloudAsync("default");
                     }
                     break;
                 case AppState.ReadyToSearch:

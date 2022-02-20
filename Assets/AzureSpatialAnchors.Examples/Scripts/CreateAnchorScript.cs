@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
 {
-    public class AzureSpatialAnchorsSharedAnchorDemoScript : DemoScriptBase
+    public class CreateAnchorScript : DemoScriptBase
     {
         internal enum AppState
         {
@@ -19,6 +19,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             DemoStepConfigSession,
             DemoStepStartSession,
             DemoStepCreateLocalAnchor,
+            DemoStepInputAnchorName,
             DemoStepSaveCloudAnchor,
             DemoStepSavingCloudAnchor,
             DemoStepStopSession,
@@ -45,21 +46,22 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             { AppState.DemoStepConfigSession,new DemoStepParams() { StepMessage = "Next: Configure CloudSpatialAnchorSession", StepColor = Color.clear }},
             { AppState.DemoStepStartSession,new DemoStepParams() { StepMessage = "Next: Start CloudSpatialAnchorSession", StepColor = Color.clear }},
             { AppState.DemoStepCreateLocalAnchor,new DemoStepParams() { StepMessage = "Tap a surface to add the local anchor.", StepColor = Color.blue }},
+            { AppState.DemoStepInputAnchorName,new DemoStepParams() { StepMessage = "Next: Input anchor name", StepColor = Color.clear }},
             { AppState.DemoStepSaveCloudAnchor,new DemoStepParams() { StepMessage = "Next: Save local anchor to cloud", StepColor = Color.yellow }},
             { AppState.DemoStepSavingCloudAnchor,new DemoStepParams() { StepMessage = "Saving local anchor to cloud...", StepColor = Color.yellow }},
             { AppState.DemoStepStopSession,new DemoStepParams() { StepMessage = "Next: Stop cloud anchor session", StepColor = Color.green }},
             { AppState.DemoStepDestroySession,new DemoStepParams() { StepMessage = "Next: Destroy Cloud Anchor session", StepColor = Color.clear }},
             { AppState.DemoStepCreateSessionForQuery,new DemoStepParams() { StepMessage = "Next: Create CloudSpatialAnchorSession for query", StepColor = Color.clear }},
             { AppState.DemoStepStartSessionForQuery,new DemoStepParams() { StepMessage = "Next: Start CloudSpatialAnchorSession for query", StepColor = Color.clear }},
-            { AppState.DemoStepLookForAnchor,new DemoStepParams() { StepMessage = "Next: Look for anchor", StepColor = Color.clear }},
-            { AppState.DemoStepLookingForAnchor,new DemoStepParams() { StepMessage = "Looking for anchor...", StepColor = Color.clear }},
+            { AppState.DemoStepLookForAnchor,new DemoStepParams() { StepMessage = "Next: Look for anchors", StepColor = Color.clear }},
+            { AppState.DemoStepLookingForAnchor,new DemoStepParams() { StepMessage = "Looking for anchors...", StepColor = Color.clear }},
             { AppState.DemoStepStopSessionForQuery,new DemoStepParams() { StepMessage = "Next: Stop CloudSpatialAnchorSession for query", StepColor = Color.yellow }},
             { AppState.DemoStepComplete,new DemoStepParams() { StepMessage = "Next: Restart demo", StepColor = Color.clear }}
         };
 
-        #if !UNITY_EDITOR
+#if !UNITY_EDITOR
         public AnchorExchanger anchorExchanger = new AnchorExchanger();
-        #endif
+#endif
 
         #region Member Variables
         private AppState _currentAppState = AppState.DemoStepChooseFlow;
@@ -70,6 +72,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         private readonly List<string> localAnchorIds = new List<string>();
         private string _anchorKeyToFind = null;
         private long? _anchorNumberToFind;
+        private string _anchorName;
         #endregion // Member Variables
 
         #region Unity Inspector Variables
@@ -116,14 +119,15 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                     currentCloudAnchor = nextCsa;
                     Pose anchorPose = Pose.identity;
 
-                    #if UNITY_ANDROID || UNITY_IOS
+#if UNITY_ANDROID || UNITY_IOS
                     anchorPose = currentCloudAnchor.GetPose();
-                    #endif
+#endif
                     // HoloLens: The position will be set based on the unityARUserAnchor that was located.
 
                     GameObject nextObject = SpawnNewAnchoredObject(anchorPose.position, anchorPose.rotation, currentCloudAnchor);
                     spawnedObjectMat = nextObject.GetComponent<MeshRenderer>().material;
-                    AttachTextMesh(nextObject, _anchorNumberToFind);
+                    string anchorName = currentCloudAnchor.AppProperties[@"sound-label"];
+                    AttachTextMesh(nextObject, _anchorNumberToFind, anchorName);
                     otherSpawnedObjects.Add(nextObject);
 
                     if (anchorsLocated >= anchorsExpected)
@@ -178,9 +182,9 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                 }
             }
 
-            #if !UNITY_EDITOR
+#if !UNITY_EDITOR
             anchorExchanger.WatchKeys(BaseSharingUrl);
-            #endif
+#endif
 
             feedbackBox.text = stateParams[currentAppState].StepMessage;
 
@@ -223,7 +227,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             return Color.magenta;
         }
 
-        private void AttachTextMesh(GameObject parentObject, long? dataToAttach)
+        private void AttachTextMesh(GameObject parentObject, long? dataToAttach, string nameToAttach)
         {
             GameObject go = new GameObject();
 
@@ -234,7 +238,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             }
             else if (dataToAttach != -1)
             {
-                tm.text = $"Anchor Number:{dataToAttach}";
+                tm.text = $"Anchor Number:{dataToAttach} \n Anchor Name:{nameToAttach}";
             }
             else
             {
@@ -260,24 +264,24 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
 
             localAnchorIds.Add(currentCloudAnchor.Identifier);
 
-            #if !UNITY_EDITOR
+#if !UNITY_EDITOR
             anchorNumber = (await anchorExchanger.StoreAnchorKey(currentCloudAnchor.Identifier));
-            #endif
+#endif
 
             Pose anchorPose = Pose.identity;
 
-            #if UNITY_ANDROID || UNITY_IOS
+#if UNITY_ANDROID || UNITY_IOS
             anchorPose = currentCloudAnchor.GetPose();
-            #endif
+#endif
             // HoloLens: The position will be set based on the unityARUserAnchor that was located.
 
             SpawnOrMoveCurrentAnchoredObject(anchorPose.position, anchorPose.rotation);
 
-            AttachTextMesh(spawnedObject, anchorNumber);
+            AttachTextMesh(spawnedObject, anchorNumber, _anchorName);
 
             currentAppState = AppState.DemoStepStopSession;
 
-            feedbackBox.text = $"Created anchor {anchorNumber}. Next: Stop cloud anchor session";
+            feedbackBox.text = $"Created anchor {anchorNumber} with name {_anchorName}. Next: Stop cloud anchor session";
         }
 
         protected override void OnSaveCloudAnchorFailed(Exception exception)
@@ -351,9 +355,9 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                 else
                 {
                     _anchorNumberToFind = anchorNumber;
-                    #if !UNITY_EDITOR
+#if !UNITY_EDITOR
                     _anchorKeyToFind = await anchorExchanger.RetrieveAnchorKey(_anchorNumberToFind.Value);
-                    #endif
+#endif
                     if (_anchorKeyToFind == null)
                     {
                         feedbackBox.text = "Anchor Number Not Found!";
@@ -407,12 +411,19 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                 case AppState.DemoStepCreateLocalAnchor:
                     if (spawnedObject != null)
                     {
+                        currentAppState = AppState.DemoStepInputAnchorName;
+                    }
+                    break;
+                case AppState.DemoStepInputAnchorName:
+                    _anchorName = XRUXPickerForSharedAnchorDemo.Instance.GetDemoInputField().text;
+                    if (_anchorName != null)
+                    {
                         currentAppState = AppState.DemoStepSaveCloudAnchor;
                     }
                     break;
                 case AppState.DemoStepSaveCloudAnchor:
                     currentAppState = AppState.DemoStepSavingCloudAnchor;
-                    await SaveCurrentObjectAnchorToCloudAsync("default");
+                    await SaveCurrentObjectAnchorToCloudAsync(_anchorName);
                     break;
                 case AppState.DemoStepStopSession:
                     CloudManager.StopSession();
@@ -474,19 +485,21 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
 
         private void EnableCorrectUIControls()
         {
+            Debug.Log("App State: " + currentAppState);
             switch (currentAppState)
             {
                 case AppState.DemoStepChooseFlow:
 
+                    
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[1].gameObject.SetActive(true);
-                    #if UNITY_WSA
+#if UNITY_WSA
                     XRUXPickerForSharedAnchorDemo.Instance.transform.position = Camera.main.transform.position + Camera.main.transform.forward * 0.1f;
                     XRUXPickerForSharedAnchorDemo.Instance.transform.LookAt(Camera.main.transform);
                     XRUXPickerForSharedAnchorDemo.Instance.transform.Rotate(Vector3.up, 180);
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].gameObject.SetActive(true);
-                    #else
+#else
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].transform.Find("Text").GetComponent<Text>().text = "Create & Share Anchor";
-                    #endif
+#endif
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoInputField().gameObject.SetActive(false);
                     break;
                 case AppState.DemoStepInputAnchorNumber:
@@ -494,14 +507,19 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].gameObject.SetActive(false);
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoInputField().gameObject.SetActive(true);
                     break;
+                case AppState.DemoStepInputAnchorName:
+                    XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[1].gameObject.SetActive(true);
+                    XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].gameObject.SetActive(false);
+                    XRUXPickerForSharedAnchorDemo.Instance.GetDemoInputField().gameObject.SetActive(true);
+                    break;
                 default:
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[1].gameObject.SetActive(false);
-                    #if UNITY_WSA
+#if UNITY_WSA
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].gameObject.SetActive(false);
-                    #else
+#else
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].gameObject.SetActive(true);
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].transform.Find("Text").GetComponent<Text>().text = "Next Step";
-                    #endif
+#endif
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoInputField().gameObject.SetActive(false);
                     break;
             }

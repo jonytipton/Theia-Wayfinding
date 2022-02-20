@@ -140,21 +140,6 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             }
         }
 
-        public virtual Task EnumerateAllNearbyAnchorsAsync() { throw new NotImplementedException(); }
-
-        public async void EnumerateAllNearbyAnchors()
-        {
-            try
-            {
-                await EnumerateAllNearbyAnchorsAsync();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"{nameof(DemoScriptBase)} - Error in {nameof(EnumerateAllNearbyAnchors)}: === {ex.GetType().Name} === {ex.ToString()} === {ex.Source} === {ex.Message} {ex.StackTrace}");
-                feedbackBox.text = $"Enumeration failed, check debugger output for more information";
-            }
-        }
-
         /// <summary>
         /// returns to the launcher scene.
         /// </summary>
@@ -340,13 +325,13 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         /// </summary>
         protected override void OnGazeInteraction()
         {
-            #if WINDOWS_UWP || UNITY_WSA
+#if WINDOWS_UWP || UNITY_WSA
             // HoloLens gaze interaction
             if (IsPlacingObject())
             {
                 base.OnGazeInteraction();
             }
-            #endif
+#endif
         }
 
         /// <summary>
@@ -358,10 +343,10 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         {
             base.OnGazeObjectInteraction(hitPoint, hitNormal);
 
-            #if WINDOWS_UWP || UNITY_WSA
+#if WINDOWS_UWP || UNITY_WSA
             Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hitNormal);
             SpawnOrMoveCurrentAnchoredObject(hitPoint, rotation);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -393,13 +378,13 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         /// <remarks>Currently only called for HoloLens.</remarks>
         protected override void OnSelectInteraction()
         {
-            #if WINDOWS_UWP || UNITY_WSA
+#if WINDOWS_UWP || UNITY_WSA
             if(enableAdvancingOnSelect)
             {
                 // On HoloLens, we just advance the demo.
                 UnityDispatcher.InvokeOnAppThread(() => advanceDemoTask = AdvanceDemoAsync());
             }
-            #endif
+#endif
 
             base.OnSelectInteraction();
         }
@@ -434,7 +419,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         /// <summary>
         /// Saves the current object anchor to the cloud.
         /// </summary>
-        protected virtual async Task SaveCurrentObjectAnchorToCloudAsync()
+        protected virtual async Task SaveCurrentObjectAnchorToCloudAsync(string anchorName)
         {
             // Get the cloud-native anchor behavior
             CloudNativeAnchor cna = spawnedObject.GetComponent<CloudNativeAnchor>();
@@ -448,8 +433,11 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             // Get the cloud portion of the anchor
             CloudSpatialAnchor cloudAnchor = cna.CloudAnchor;
 
+            cloudAnchor.AppProperties[@"sound-label"] = @anchorName;
+
             // In this sample app we delete the cloud anchor explicitly, but here we show how to set an anchor to expire automatically
-            cloudAnchor.Expiration = DateTimeOffset.Now.AddDays(7);
+            // Commented out to prevent anchor expiration
+            //cloudAnchor.Expiration = DateTimeOffset.Now.AddDays(7);
 
             while (!CloudManager.IsReadyForCreate)
             {
@@ -457,8 +445,6 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                 float createProgress = CloudManager.SessionStatus.RecommendedForCreateProgress;
                 feedbackBox.text = $"Move your device to capture more environment data: {createProgress:0%}";
             }
-
-            bool success = false;
 
             feedbackBox.text = "Saving...";
 
@@ -471,9 +457,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                 currentCloudAnchor = cloudAnchor;
 
                 // Success?
-                success = currentCloudAnchor != null;
-
-                if (success && !isErrorActive)
+                if ((currentCloudAnchor != null) && !isErrorActive)
                 {
                     // Await override, which may perform additional tasks
                     // such as storing the key in the AnchorExchanger
@@ -565,7 +549,6 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
 
         private void CloudManager_AnchorLocated(object sender, AnchorLocatedEventArgs args)
         {
-            Debug.LogFormat("Anchor recognized as a possible anchor {0} {1}", args.Identifier, args.Status);
             if (args.Status == LocateAnchorStatus.Located)
             {
                 OnCloudAnchorLocated(args);
