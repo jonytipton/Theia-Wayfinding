@@ -24,11 +24,13 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             DemoStepSavingCloudAnchor,
             DemoStepStopSession,
             DemoStepDestroySession,
+            
             DemoStepCreateSessionForQuery,
             DemoStepStartSessionForQuery,
             DemoStepLookForAnchor,
             DemoStepLookingForAnchor,
             DemoStepStopSessionForQuery,
+            
             DemoStepComplete,
         }
 
@@ -51,12 +53,14 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             { AppState.DemoStepSavingCloudAnchor,new DemoStepParams() { StepMessage = "Saving local anchor to cloud...", StepColor = Color.yellow }},
             { AppState.DemoStepStopSession,new DemoStepParams() { StepMessage = "Next: Stop cloud anchor session", StepColor = Color.green }},
             { AppState.DemoStepDestroySession,new DemoStepParams() { StepMessage = "Next: Destroy Cloud Anchor session", StepColor = Color.clear }},
+            
             { AppState.DemoStepCreateSessionForQuery,new DemoStepParams() { StepMessage = "Next: Create CloudSpatialAnchorSession for query", StepColor = Color.clear }},
             { AppState.DemoStepStartSessionForQuery,new DemoStepParams() { StepMessage = "Next: Start CloudSpatialAnchorSession for query", StepColor = Color.clear }},
             { AppState.DemoStepLookForAnchor,new DemoStepParams() { StepMessage = "Next: Look for anchors", StepColor = Color.clear }},
             { AppState.DemoStepLookingForAnchor,new DemoStepParams() { StepMessage = "Looking for anchors...", StepColor = Color.clear }},
             { AppState.DemoStepStopSessionForQuery,new DemoStepParams() { StepMessage = "Next: Stop CloudSpatialAnchorSession for query", StepColor = Color.yellow }},
             { AppState.DemoStepComplete,new DemoStepParams() { StepMessage = "Next: Restart demo", StepColor = Color.clear }}
+            
         };
 
 #if !UNITY_EDITOR
@@ -128,12 +132,24 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                     spawnedObjectMat = nextObject.GetComponent<MeshRenderer>().material;
                     string anchorName = currentCloudAnchor.AppProperties[@"sound-label"];
                     AttachTextMesh(nextObject, _anchorNumberToFind, anchorName);
+                    switch (anchorName) {
+                        case "0": {
+                                //do nothing
+                                break;
+                        }
+                        case "1": {
+                            nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Lightswitch");
+                                break;
+                        }
+                    }
                     otherSpawnedObjects.Add(nextObject);
 
+                    
                     if (anchorsLocated >= anchorsExpected)
                     {
                         currentAppState = AppState.DemoStepStopSessionForQuery;
                     }
+                    
                 });
             }
         }
@@ -300,6 +316,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             {
                 await AdvanceCreateFlowDemoAsync();
             }
+            
             else if (_currentDemoFlow == DemoFlow.LocateFlow)
             {
                 await AdvanceLocateFlowDemoAsync();
@@ -442,6 +459,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             }
         }
 
+        
         private async Task AdvanceLocateFlowDemoAsync()
         {
             switch (currentAppState)
@@ -528,7 +546,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         private void ConfigureSession()
         {
             List<string> anchorsToFind = new List<string>();
-
+            
             if (currentAppState == AppState.DemoStepCreateSessionForQuery)
             {
                 anchorsToFind.Add(_anchorKeyToFind);
