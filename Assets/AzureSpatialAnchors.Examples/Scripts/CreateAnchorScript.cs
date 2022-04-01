@@ -18,17 +18,22 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             DemoStepCreateSession,
             DemoStepConfigSession,
             DemoStepStartSession,
+            DemoStepCreateLocationProvider,
+            DemoStepConfigureSensors,
             DemoStepCreateLocalAnchor,
             DemoStepInputAnchorName,
             DemoStepSaveCloudAnchor,
             DemoStepSavingCloudAnchor,
             DemoStepStopSession,
             DemoStepDestroySession,
+
             DemoStepCreateSessionForQuery,
             DemoStepStartSessionForQuery,
-            DemoStepLookForAnchor,
-            DemoStepLookingForAnchor,
+            DemoStepLookForAnchorsNearDevice,
+            DemoStepLookingForAnchorsNearDevice,
+            DemoStepStopWatcher,
             DemoStepStopSessionForQuery,
+
             DemoStepComplete,
         }
 
@@ -51,12 +56,15 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             { AppState.DemoStepSavingCloudAnchor,new DemoStepParams() { StepMessage = "Saving local anchor to cloud...", StepColor = Color.yellow }},
             { AppState.DemoStepStopSession,new DemoStepParams() { StepMessage = "Next: Stop cloud anchor session", StepColor = Color.green }},
             { AppState.DemoStepDestroySession,new DemoStepParams() { StepMessage = "Next: Destroy Cloud Anchor session", StepColor = Color.clear }},
-            { AppState.DemoStepCreateSessionForQuery,new DemoStepParams() { StepMessage = "Next: Create CloudSpatialAnchorSession for query", StepColor = Color.clear }},
-            { AppState.DemoStepStartSessionForQuery,new DemoStepParams() { StepMessage = "Next: Start CloudSpatialAnchorSession for query", StepColor = Color.clear }},
-            { AppState.DemoStepLookForAnchor,new DemoStepParams() { StepMessage = "Next: Look for anchors", StepColor = Color.clear }},
-            { AppState.DemoStepLookingForAnchor,new DemoStepParams() { StepMessage = "Looking for anchors...", StepColor = Color.clear }},
-            { AppState.DemoStepStopSessionForQuery,new DemoStepParams() { StepMessage = "Next: Stop CloudSpatialAnchorSession for query", StepColor = Color.yellow }},
+
+            { AppState.DemoStepCreateSessionForQuery,new DemoStepParams() { StepMessage = "Next: Create Azure Spatial Anchors Session for query", StepColor = Color.clear }},
+            { AppState.DemoStepStartSessionForQuery,new DemoStepParams() { StepMessage = "Next: Start Azure Spatial Anchors Session for query", StepColor = Color.clear }},
+            { AppState.DemoStepLookForAnchorsNearDevice,new DemoStepParams() { StepMessage = "Next: Look for Anchors near device", StepColor = Color.clear }},
+            { AppState.DemoStepLookingForAnchorsNearDevice,new DemoStepParams() { StepMessage = "Looking for Anchors near device...", StepColor = Color.clear }},
+            { AppState.DemoStepStopWatcher,new DemoStepParams() { StepMessage = "Next: Stop Watcher", StepColor = Color.green }},
+            { AppState.DemoStepStopSessionForQuery,new DemoStepParams() { StepMessage = "Next: Stop Azure Spatial Anchors Session for query", StepColor = Color.grey }},
             { AppState.DemoStepComplete,new DemoStepParams() { StepMessage = "Next: Restart demo", StepColor = Color.clear }}
+
         };
 
 #if !UNITY_EDITOR
@@ -80,6 +88,8 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         [Tooltip("The base URL for the example sharing service.")]
         private string baseSharingUrl = "";
         #endregion // Unity Inspector Variables
+
+        private PlatformLocationProvider locationProvider;
 
         private AppState currentAppState
         {
@@ -128,12 +138,63 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                     spawnedObjectMat = nextObject.GetComponent<MeshRenderer>().material;
                     string anchorName = currentCloudAnchor.AppProperties[@"sound-label"];
                     AttachTextMesh(nextObject, _anchorNumberToFind, anchorName);
-                    otherSpawnedObjects.Add(nextObject);
-
-                    if (anchorsLocated >= anchorsExpected)
-                    {
-                        currentAppState = AppState.DemoStepStopSessionForQuery;
+                    switch (anchorName) {
+                        case "0": {
+                                //do nothing
+                                break;
+                        }
+                        case "1": {
+                                Debug.Log("AnchorName: " + anchorName);
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Lightswitch");
+                                break;
+                        }
+                        case "2":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Linc_Main_Entrance");
+                                break;
+                            }
+                        case "3":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Linc_Side_Entrance");
+                                break;
+                            }
+                        case "4":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Restroom");
+                                break;
+                            }
+                        case "5":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Linc_Outdoor_Patio");
+                                break;
+                            }
+                        case "6":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Drinking_Fountain");
+                                break;
+                            }
+                        case "7":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Kitchen_Area");
+                                break;
+                            }
+                        case "8":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Bus_Stop");
+                                break;
+                            }
+                        case "9":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Audio_Room");
+                                break;
+                            }
+                        case "10":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Lobby");
+                                break;
+                            }
                     }
+                    otherSpawnedObjects.Add(nextObject);
                 });
             }
         }
@@ -300,6 +361,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             {
                 await AdvanceCreateFlowDemoAsync();
             }
+            
             else if (_currentDemoFlow == DemoFlow.LocateFlow)
             {
                 await AdvanceLocateFlowDemoAsync();
@@ -342,33 +404,8 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         {
             if (currentAppState == AppState.DemoStepChooseFlow)
             {
-                currentAppState = AppState.DemoStepInputAnchorNumber;
-            }
-            else if (currentAppState == AppState.DemoStepInputAnchorNumber)
-            {
-                long anchorNumber;
-                string inputText = XRUXPickerForSharedAnchorDemo.Instance.GetDemoInputField().text;
-                if (!long.TryParse(inputText, out anchorNumber))
-                {
-                    feedbackBox.text = "Invalid Anchor Number!";
-                }
-                else
-                {
-                    _anchorNumberToFind = anchorNumber;
-#if !UNITY_EDITOR
-                    _anchorKeyToFind = await anchorExchanger.RetrieveAnchorKey(_anchorNumberToFind.Value);
-#endif
-                    if (_anchorKeyToFind == null)
-                    {
-                        feedbackBox.text = "Anchor Number Not Found!";
-                    }
-                    else
-                    {
-                        _currentDemoFlow = DemoFlow.LocateFlow;
-                        currentAppState = AppState.DemoStepCreateSession;
-                        XRUXPickerForSharedAnchorDemo.Instance.GetDemoInputField().text = "";
-                    }
-                }
+                _currentDemoFlow = DemoFlow.LocateFlow;
+                currentAppState = AppState.DemoStepCreateSessionForQuery;
             }
             else
             {
@@ -401,12 +438,25 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                     currentAppState = AppState.DemoStepConfigSession;
                     break;
                 case AppState.DemoStepConfigSession:
-                    ConfigureSession();
+                    ConfigureQuerySession();
                     currentAppState = AppState.DemoStepStartSession;
                     break;
                 case AppState.DemoStepStartSession:
                     await CloudManager.StartSessionAsync();
+                    currentAppState = AppState.DemoStepCreateLocationProvider;
+                    break;
+                case AppState.DemoStepCreateLocationProvider:
+                    locationProvider = new PlatformLocationProvider();
+                    CloudManager.Session.LocationProvider = locationProvider;
+                    currentAppState = AppState.DemoStepConfigureSensors;
+                    break;
+                case AppState.DemoStepConfigureSensors:
+                    SensorPermissionHelper.RequestSensorPermissions();
+                    ConfigureSensors();
                     currentAppState = AppState.DemoStepCreateLocalAnchor;
+                    // Enable advancing to next step on Air Tap, which is an easier interaction for placing the anchor.
+                    // (placing the anchor with Air tap automatically advances the demo).
+                    //enableAdvancingOnSelect = true;
                     break;
                 case AppState.DemoStepCreateLocalAnchor:
                     if (spawnedObject != null)
@@ -442,39 +492,45 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             }
         }
 
+        
         private async Task AdvanceLocateFlowDemoAsync()
         {
             switch (currentAppState)
             {
-                case AppState.DemoStepCreateSession:
-                    currentAppState = AppState.DemoStepChooseFlow;
-                    currentCloudAnchor = null;
-                    currentAppState = AppState.DemoStepCreateSessionForQuery;
-                    break;
                 case AppState.DemoStepCreateSessionForQuery:
-                    anchorsLocated = 0;
-                    ConfigureSession();
+                    ConfigureQuerySession();
+                    locationProvider = new PlatformLocationProvider();
+                    CloudManager.Session.LocationProvider = locationProvider;
+                    ConfigureSensors();
                     currentAppState = AppState.DemoStepStartSessionForQuery;
                     break;
                 case AppState.DemoStepStartSessionForQuery:
                     await CloudManager.StartSessionAsync();
-                    currentAppState = AppState.DemoStepLookForAnchor;
+                    currentAppState = AppState.DemoStepLookForAnchorsNearDevice;
                     break;
-                case AppState.DemoStepLookForAnchor:
-                    currentAppState = AppState.DemoStepLookingForAnchor;
+                case AppState.DemoStepLookForAnchorsNearDevice:
+                    currentAppState = AppState.DemoStepLookingForAnchorsNearDevice;
                     currentWatcher = CreateWatcher();
                     break;
-                case AppState.DemoStepLookingForAnchor:
-                    // Advancement will take place when anchors have all been located.
+                case AppState.DemoStepLookingForAnchorsNearDevice:
+                    break;
+                case AppState.DemoStepStopWatcher:
+                    if (currentWatcher != null)
+                    {
+                        currentWatcher.Stop();
+                        currentWatcher = null;
+                    }
+                    currentAppState = AppState.DemoStepStopSessionForQuery;
                     break;
                 case AppState.DemoStepStopSessionForQuery:
                     CloudManager.StopSession();
+                    currentWatcher = null;
+                    locationProvider = null;
                     currentAppState = AppState.DemoStepComplete;
                     break;
                 case AppState.DemoStepComplete:
                     currentCloudAnchor = null;
-                    currentWatcher = null;
-                    currentAppState = AppState.DemoStepChooseFlow;
+                    currentAppState = AppState.DemoStepCreateSession;
                     CleanupSpawnedObjects();
                     break;
                 default:
@@ -489,8 +545,6 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             switch (currentAppState)
             {
                 case AppState.DemoStepChooseFlow:
-
-                    
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[1].gameObject.SetActive(true);
 #if UNITY_WSA
                     XRUXPickerForSharedAnchorDemo.Instance.transform.position = Camera.main.transform.position + Camera.main.transform.forward * 0.1f;
@@ -528,7 +582,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         private void ConfigureSession()
         {
             List<string> anchorsToFind = new List<string>();
-
+            
             if (currentAppState == AppState.DemoStepCreateSessionForQuery)
             {
                 anchorsToFind.Add(_anchorKeyToFind);
@@ -537,6 +591,13 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                 anchorsExpected = anchorsToFind.Count;
                 SetAnchorIdsToLocate(anchorsToFind);
             }
+        }
+
+        private void ConfigureQuerySession()
+        {
+            const float distanceInMeters = 8.0f;
+            const int maxAnchorsToFind = 35;
+            SetNearDevice(distanceInMeters, maxAnchorsToFind);
         }
 
         protected override void CleanupSpawnedObjects()
@@ -549,6 +610,89 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             }
 
             otherSpawnedObjects.Clear();
+        }
+
+        private void ConfigureSensors()
+        {
+            locationProvider.Sensors.GeoLocationEnabled = SensorPermissionHelper.HasGeoLocationPermission();
+
+            locationProvider.Sensors.WifiEnabled = SensorPermissionHelper.HasWifiPermission();
+
+            locationProvider.Sensors.BluetoothEnabled = SensorPermissionHelper.HasBluetoothPermission();
+            locationProvider.Sensors.KnownBeaconProximityUuids = CoarseRelocSettings.KnownBluetoothProximityUuids;
+        }
+
+        public SensorStatus GeoLocationStatus
+        {
+            get
+            {
+                if (locationProvider == null)
+                    return SensorStatus.MissingSensorFingerprintProvider;
+                if (!locationProvider.Sensors.GeoLocationEnabled)
+                    return SensorStatus.DisabledCapability;
+                switch (locationProvider.GeoLocationStatus)
+                {
+                    case GeoLocationStatusResult.Available:
+                        return SensorStatus.Available;
+                    case GeoLocationStatusResult.DisabledCapability:
+                        return SensorStatus.DisabledCapability;
+                    case GeoLocationStatusResult.MissingSensorFingerprintProvider:
+                        return SensorStatus.MissingSensorFingerprintProvider;
+                    case GeoLocationStatusResult.NoGPSData:
+                        return SensorStatus.NoData;
+                    default:
+                        return SensorStatus.MissingSensorFingerprintProvider;
+                }
+            }
+        }
+
+        public SensorStatus WifiStatus
+        {
+            get
+            {
+                if (locationProvider == null)
+                    return SensorStatus.MissingSensorFingerprintProvider;
+                if (!locationProvider.Sensors.WifiEnabled)
+                    return SensorStatus.DisabledCapability;
+                switch (locationProvider.WifiStatus)
+                {
+                    case WifiStatusResult.Available:
+                        return SensorStatus.Available;
+                    case WifiStatusResult.DisabledCapability:
+                        return SensorStatus.DisabledCapability;
+                    case WifiStatusResult.MissingSensorFingerprintProvider:
+                        return SensorStatus.MissingSensorFingerprintProvider;
+                    case WifiStatusResult.NoAccessPointsFound:
+                        return SensorStatus.NoData;
+                    default:
+                        return SensorStatus.MissingSensorFingerprintProvider;
+                }
+            }
+        }
+
+
+        public SensorStatus BluetoothStatus
+        {
+            get
+            {
+                if (locationProvider == null)
+                    return SensorStatus.MissingSensorFingerprintProvider;
+                if (!locationProvider.Sensors.BluetoothEnabled)
+                    return SensorStatus.DisabledCapability;
+                switch (locationProvider.BluetoothStatus)
+                {
+                    case BluetoothStatusResult.Available:
+                        return SensorStatus.Available;
+                    case BluetoothStatusResult.DisabledCapability:
+                        return SensorStatus.DisabledCapability;
+                    case BluetoothStatusResult.MissingSensorFingerprintProvider:
+                        return SensorStatus.MissingSensorFingerprintProvider;
+                    case BluetoothStatusResult.NoBeaconsFound:
+                        return SensorStatus.NoData;
+                    default:
+                        return SensorStatus.MissingSensorFingerprintProvider;
+                }
+            }
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.microsoft.azure.spatial-anchors-sdk.core": {
-      "version": "file:../com.microsoft.azure.spatial-anchors-sdk.core-2.12.0.tgz",
+      "version": "file:/Users/jonathan/Documents/REPOS/TheiaWayfinding/com.microsoft.azure.spatial-anchors-sdk.core-2.12.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -11,7 +11,7 @@
       }
     },
     "com.microsoft.azure.spatial-anchors-sdk.ios": {
-      "version": "file:../com.microsoft.azure.spatial-anchors-sdk.ios-2.12.0.tgz",
+      "version": "file:/Users/jonathan/Documents/REPOS/TheiaWayfinding/com.microsoft.azure.spatial-anchors-sdk.ios-2.12.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {

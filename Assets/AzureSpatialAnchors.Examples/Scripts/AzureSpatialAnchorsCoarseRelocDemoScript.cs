@@ -339,7 +339,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                     break;
                 case AppState.DemoStepSaveCloudAnchor:
                     currentAppState = AppState.DemoStepSavingCloudAnchor;
-                    await SaveCurrentObjectAnchorToCloudAsync("default");
+                    await SaveCurrentObjectAnchorToCloudAsync("0");
                     break;
                 case AppState.DemoStepStopSession:
                     CloudManager.StopSession();
