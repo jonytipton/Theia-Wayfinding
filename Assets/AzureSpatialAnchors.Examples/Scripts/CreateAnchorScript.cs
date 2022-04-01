@@ -148,6 +148,51 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                                 nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Lightswitch");
                                 break;
                         }
+                        case "2":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Linc_Main_Entrance");
+                                break;
+                            }
+                        case "3":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Linc_Side_Entrance");
+                                break;
+                            }
+                        case "4":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Restroom");
+                                break;
+                            }
+                        case "5":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Linc_Outdoor_Patio");
+                                break;
+                            }
+                        case "6":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Drinking_Fountain");
+                                break;
+                            }
+                        case "7":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Kitchen_Area");
+                                break;
+                            }
+                        case "8":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Bus_Stop");
+                                break;
+                            }
+                        case "9":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Audio_Room");
+                                break;
+                            }
+                        case "10":
+                            {
+                                nextObject.GetComponent<ReachedAnchor>().reachTone = Resources.Load<AudioClip>("Audio/Lobby");
+                                break;
+                            }
                     }
                     otherSpawnedObjects.Add(nextObject);
                 });
