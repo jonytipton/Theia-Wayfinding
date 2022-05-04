@@ -57,6 +57,7 @@ public class UpdateSensorState : MonoBehaviour
                 break;
             case Sensor.Bluetooth:
                 UpdateColor(CoarseRelocDemoScript.BluetoothStatus);
+                Debug.Log("Bluetooth state: " + CoarseRelocDemoScript.BluetoothStatus);
                 break;
         }
     }

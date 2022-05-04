@@ -552,6 +552,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
 
             locationProvider.Sensors.BluetoothEnabled = SensorPermissionHelper.HasBluetoothPermission();
             locationProvider.Sensors.KnownBeaconProximityUuids = CoarseRelocSettings.KnownBluetoothProximityUuids;
+            //Debug.Log("Beacons: " + locationProvider.Sensors.KnownBeaconProximityUuids);
         }
     }
 }
