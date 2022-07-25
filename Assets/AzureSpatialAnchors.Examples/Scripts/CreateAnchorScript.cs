@@ -140,7 +140,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                     AttachTextMesh(nextObject, _anchorNumberToFind, anchorName);
                     switch (anchorName) {
                         case "0": {
-                                //do nothing
+                                //do nothing, default sound attached to anchor prefab in unity editor
                                 break;
                         }
                         case "1": {
@@ -372,6 +372,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         {
             if (currentAppState == AppState.DemoStepChooseFlow)
             {
+                Debug.Log("In create here");
                 _currentDemoFlow = DemoFlow.CreateFlow;
                 currentAppState = AppState.DemoStepCreateSession;
             }
@@ -404,6 +405,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         {
             if (currentAppState == AppState.DemoStepChooseFlow)
             {
+                Debug.Log("In locate async");
                 _currentDemoFlow = DemoFlow.LocateFlow;
                 currentAppState = AppState.DemoStepCreateSessionForQuery;
             }
@@ -498,6 +500,9 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             switch (currentAppState)
             {
                 case AppState.DemoStepCreateSessionForQuery:
+                    if (CloudManager.Session == null) {
+                        await CloudManager.CreateSessionAsync();
+                    }
                     ConfigureQuerySession();
                     locationProvider = new PlatformLocationProvider();
                     CloudManager.Session.LocationProvider = locationProvider;
@@ -513,6 +518,10 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                     currentWatcher = CreateWatcher();
                     break;
                 case AppState.DemoStepLookingForAnchorsNearDevice:
+                    EnableCorrectUIControls();
+                    //Technically the watcher is still active and looking for anchors
+                    //app state set to stop watcher here but is triggered on press of "tap to end query" button that appears during the DemoStepLookingForAnchorsNearDevice app state
+                    currentAppState = AppState.DemoStepStopWatcher;
                     break;
                 case AppState.DemoStepStopWatcher:
                     if (currentWatcher != null)
@@ -526,11 +535,12 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                     CloudManager.StopSession();
                     currentWatcher = null;
                     locationProvider = null;
+                    await CloudManager.ResetSessionAsync();
                     currentAppState = AppState.DemoStepComplete;
                     break;
                 case AppState.DemoStepComplete:
                     currentCloudAnchor = null;
-                    currentAppState = AppState.DemoStepCreateSession;
+                    currentAppState = AppState.DemoStepChooseFlow;
                     CleanupSpawnedObjects();
                     break;
                 default:
@@ -566,6 +576,16 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].gameObject.SetActive(false);
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoInputField().gameObject.SetActive(true);
                     break;
+                case AppState.DemoStepLookingForAnchorsNearDevice:
+                    XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].gameObject.SetActive(true);
+                    XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].transform.Find("Text").GetComponent<Text>().text = "Tap to end query";
+                    break;
+                case AppState.DemoStepStopWatcher:
+                    XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].transform.Find("Text").GetComponent<Text>().text = "Watcher stopped. Tap to end session";
+                    break;
+                case AppState.DemoStepStopSessionForQuery:
+                    XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].transform.Find("Text").GetComponent<Text>().text = "Watcher stopped. Tap to end session";
+                    break;
                 default:
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[1].gameObject.SetActive(false);
 #if UNITY_WSA
@@ -579,6 +599,9 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             }
         }
 
+        /*
+        /Used for finding list of specifc anchors. Not used currently
+        */
         private void ConfigureSession()
         {
             List<string> anchorsToFind = new List<string>();
@@ -596,7 +619,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         private void ConfigureQuerySession()
         {
             const float distanceInMeters = 8.0f;
-            const int maxAnchorsToFind = 35;
+            const int maxAnchorsToFind = 25;
             SetNearDevice(distanceInMeters, maxAnchorsToFind);
         }
 

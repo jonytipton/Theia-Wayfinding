@@ -20,6 +20,9 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             "8492E75F-4FD6-469D-B132-043FE94921D8", //virtual beacon NOT WORKING?
             "EDD1EBEA-C04E-5DEF-A017-410514E11DA9", //Blueberry broadcasting eddystone, Namespace + Instance. WORKING!
             "EDD1EBEA-C04E-5DEF-A018-C99EB10332CC", //Mint broadcasting eddystone, Namepase + Instance. WORKING!
+            "EDD1EBEA-C04E-5DEF-A019-1323C51D2B74", //cyan, eddystone
+            "EDD1EBEA-C04E-5DEF-A020-1323C51D2B74", //blueberry eddystone
+            "EDD1EBEA-C04E-5DEF-A021-9C2456CF52E9", //beige eddystone
         };
     }
 }
