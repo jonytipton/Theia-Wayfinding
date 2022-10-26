@@ -3,6 +3,9 @@
 ## Overview
 Android/iOS application that utilizes Microsoft Azure Spatial Anchors (ASA) to enable wayfinding in specific environments. Spatial anchors stored in an Azure Resource Group and session sharing enabled with an Azure App Service.
 
+## Demo/Walkthrough
+![Video of App Demo](https://drive.google.com/file/d/1X2MV-Nc5m1o5PoR-apOdHaOrtTsn4QiB/view?usp=sharing)
+
 ## Prerequisites
 ### Android
 - TBD
