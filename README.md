@@ -1,14 +1,19 @@
 # Theia Wayfinding
+<p align="center">
 <img src="https://user-images.githubusercontent.com/42556403/198001193-7eb10565-8192-442f-a152-1c9d4a768247.png" alt="icon" width="200"/>
+</p>
 
 ## Overview
-Android/iOS application that utilizes Microsoft Azure Spatial Anchors (ASA) to enable wayfinding in specific environments. Spatial anchors stored in an Azure Resource Group and session sharing enabled with an Azure App Service.
+Android/iOS application that utilizes Microsoft Azure Spatial Anchors (ASA) to enable wayfinding in specific environments. Spatial anchors stored in an Azure Resource Group and session sharing enabled with an Azure App Service. 
 
 ## Demo/Walkthrough
-<body> 
+
+https://github.com/jonytipton/Theia-Wayfinding/assets/42556403/0761904c-11dc-4d5f-8fc2-22cb17519659
+
+<p align="center"> 
     <a href="https://www.youtube.com/watch?v=RbjGKzxAFFQ">
-    <img src="https://user-images.githubusercontent.com/42556403/198002807-c412aeeb-5c9d-4e7c-b4b4-038022945123.png" alt="icon" width="500"/>
-</body>
+    <img src="https://user-images.githubusercontent.com/42556403/198002807-c412aeeb-5c9d-4e7c-b4b4-038022945123.png" alt="icon"/>
+</p>
 
 ## Prerequisites
 ### Android
